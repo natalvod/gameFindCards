@@ -86,5 +86,4 @@ const app = {
         pair: -1, //id my choosen cart
     }
 }
-
 app.steps.start();
