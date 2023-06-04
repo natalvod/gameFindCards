@@ -6,6 +6,7 @@ const removeActiveAttrElements = (listElements) => {
 }
 const selectLevel = (elem) => {
     app.state.level = Number(elem.innerHTML);
+    app.state.pair = app.levels[app.state.level]
     //console.log(elem.innerHTML);
     removeActiveAttrElements(elem.parentNode.children)
     // console.log(typeof Number(elem.innerHTML));
@@ -43,12 +44,104 @@ const clearBoard = () => {
     console.log(board);  
     board.innerHTML = "";   
 }
+
+const initTimer = () => {
+    let min = 00;
+    let sec = 00;
+    let timerNode = document.createElement("div")
+    timerNode.classList.add("timer")
+    // timerNode.id = "timer"
+    // let timerContainer = document.getElementById("timer")
+    const time = setInterval(timer, 1000)
+    function timer() {
+          sec = Number(sec) + 1;
+          if (sec === 60) {
+            sec = 00;
+            min = Number(min) + 1;
+            
+            if (min === 60) {
+              min = 00;
+            }
+          }
+          if(Number(min) < 10) {
+            min = `0${+min}`
+          }
+          if(Number(sec) < 10) {
+            sec= `0${+sec}`
+          }
+          timerNode.innerHTML = `
+          
+          <div class="timer__item">
+            <div class="timer__title">min</div>
+            <div>${String(min)}</div>
+          </div>
+          <span>.</span>
+          <div class="timer__item">
+            <div class="timer__title">sec</div>
+            <div>${String(sec)}</div>
+          </div>`
+      }
+return timerNode
+}
+const restartGame = () => {
+    let buttonNode = document.createElement("button")
+    buttonNode.innerHTML = "Начать заново"
+    buttonNode.type = "button"
+    buttonNode.classList.add("button", "button--clear")
+    buttonNode.onclick = () => {
+        // то же самое, что play(), но с задержкой
+        // clearBoard()
+        play()
+        // setTimeout(initGameBoard, 1000)
+    }
+    return buttonNode
+}
+const initCard = (cardData) => {
+    let cardNode = document.createElement("div")
+    cardNode.classList.add("card")
+    cardNode.dataset.pair = cardData.id
+    cardNode.innerHTML = `<img src="${cardData.img}" width=50 hight=100 class="card__img">`
+    return cardNode
+}
+const initCardList = () => {
+    let cardContainer = document.createElement("div")
+    const cardListArray = []
+    cardContainer.classList.add("card-list")
+    for(let pair = 0; pair < app.state.pair; pair++) {
+        cardListArray.push(app.cards[pair])
+        cardListArray.push(app.cards[pair])
+    }
+    console.log(app.state.pair);
+    console.dir(cardListArray);
+    //вызываем функцию сортировки карточек
+    cardListArray.forEach(cardData => {
+        cardContainer.appendChild(initCard(cardData))
+    })
+    return cardContainer
+}
 const initGameBoard = () => {
-    board.innerHTML = 
-    `<div>
-       <h1>playing...
-       </h1>
-    </div>`
+    let boardWrapNode = document.createElement("div")
+    boardWrapNode.classList.add("board-wrap")
+    boardWrapNode.appendChild(initTimer())
+    boardWrapNode.appendChild(restartGame())
+    boardWrapNode.appendChild(initCardList())
+    board.appendChild(boardWrapNode)
+    // board.innerHTML = 
+    // `<div id="timer"> 
+    //    ${initTimer()}
+    //  </div>
+    //  <div> 
+    //    ${restartGame()}
+    //  </div>
+    //  <div> 
+    //    ${initCardList()}
+    //  </div>
+    
+    
+    // <div>
+    //    <h1>playing...
+    //    </h1>
+    // </div>`
 }
 const play= () => {
     clearBoard();
@@ -61,9 +154,9 @@ const result=() => {
 
 const app = {
     levels: {
-        1: 6,
-        2: 12,
-        3: 18
+        1: 3,
+        2: 6,
+        3: 9
     },
     steps: {
         start: init,
@@ -73,11 +166,43 @@ const app = {
     cards: [
         {
             id: 1,
-            img: ""
+            img: "https://via.placeholder.com/50x100"
         },
        {
             id: 2,
-            img: ""
+            img: "https://via.placeholder.com/50x100"
+        },
+        {
+            id: 3,
+            img: "https://via.placeholder.com/50x100"
+        },
+       {
+            id: 4,
+            img: "https://via.placeholder.com/50x100"
+        },
+        {
+            id: 5,
+            img: "https://via.placeholder.com/50x100"
+        },
+       {
+            id: 6,
+            img: "https://via.placeholder.com/50x100"
+        },
+        {
+            id: 7,
+            img: "https://via.placeholder.com/50x100"
+        },
+       {
+            id: 8,
+            img: "https://via.placeholder.com/50x100"
+        },
+        {
+            id: 9,
+            img: "https://via.placeholder.com/50x100"
+        },
+       {
+            id: 10,
+            img: "https://via.placeholder.com/50x100"
         }
     ],
     state: {
