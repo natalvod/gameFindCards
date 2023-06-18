@@ -46,21 +46,22 @@ const clearBoard = () => {
 }
 
 const initTimer = () => {
-    let min = 00;
-    let sec = 00;
+    let min = 0;
+    let sec = 0;
     let timerNode = document.createElement("div")
     timerNode.classList.add("timer")
     // timerNode.id = "timer"
     // let timerContainer = document.getElementById("timer")
-    const time = setInterval(timer, 1000)
+    // const time = 
+    setInterval(timer, 1000)
     function timer() {
           sec = Number(sec) + 1;
           if (sec === 60) {
-            sec = 00;
+            sec = 0;
             min = Number(min) + 1;
             
             if (min === 60) {
-              min = 00;
+              min = 0;
             }
           }
           if(Number(min) < 10) {

@@ -1,5 +1,5 @@
 @font-face {
-    font-family: "StratosSkyeng";
+    font-family: StratosSkyeng;
     font-weight: 400;
     font-style: normal;
     src: local("StratosSkyeng"),
@@ -9,7 +9,7 @@
 }
 
 @font-face {
-    font-family: "StratosSkyeng";
+    font-family: StratosSkyeng;
     font-weight: 700;
     font-style: normal;
     src: local("StratosSkyeng"),
@@ -18,7 +18,7 @@
 }
 
 body {
-    font-family: "StratosSkyeng", "Arial", sans-serif;
+    font-family: StratosSkyeng, Arial, sans-serif;
     font-style: normal;
     font-weight: 400;
     margin: 0;
@@ -42,6 +42,7 @@ body {
     margin-bottom: 158px;
     padding-top: 52px;
     min-width: 480px;
+
     &__link {
         display: flex;
         width: 97px;
@@ -51,7 +52,7 @@ body {
         color: #0080c1;
         font-size: 64px;
         line-height: 72px;
-        background: #ffffff;
+        background: #fff;
         border-radius: 12px;
         text-decoration: none;
     }
@@ -82,15 +83,17 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #ffffff;
+    color: #fff;
     border: none;
     cursor: pointer;
+
     &--start {
         margin: 0 auto;
         margin-top: 67px;
         font-size: 24px;
         line-height: 32px;
     }
+
     &--clear {
         grid-area: button;
         margin-left: auto;
@@ -109,13 +112,15 @@ body {
     width: 95px;
     height: 133px;
     position: relative;
+
     &::after {
         content: "";
         position: absolute;
         inset: 0;
-        background-image: url(../img/card-side.svg);
+        background-image: url("../img/card-side.svg");
         background-repeat: no-repeat;
     }
+
     &__img {
         width: 100%;
         height: 100%;
@@ -143,7 +148,7 @@ body {
     font-weight: 400;
     font-size: 64px;
     line-height: 50px;
-    color: #ffffff;
+    color: #fff;
     align-items: end;
 
     &__title {
