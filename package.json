@@ -1,0 +1,30 @@
+{
+  "name": "gamefindcards",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
+    "lint:js": "eslint ./js/*.js",
+    "lint:css": "stylelint ./style/*.scss --fix",
+    "lint": "npm run lint:js && npm run lint:css",
+    "prepare": "husky install"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
+    "prettier": "^2.8.8",
+    "stylelint": "^15.8.0",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-standard": "^33.0.0",
+    "stylelint-prettier": "^3.0.0"
+  }
+}
