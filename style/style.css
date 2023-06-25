@@ -11,7 +11,7 @@
   src: local("StratosSkyeng"), url("/gameFindCards/font/stratosskyengweb-bold.woff2") format("woff2"), url("/gameFindCards/font/stratosskyengweb-bold.woff") format("woff");
 }
 body {
-  font-family: "StratosSkyeng", Arial, sans-serif;
+  font-family: StratosSkyeng, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   margin: 0;
