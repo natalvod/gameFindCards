@@ -1,3 +1,5 @@
+import '../style/style.scss';
+
 const board = document.querySelector("#app");
 
 const removeActiveAttrElements = (listElements) => {

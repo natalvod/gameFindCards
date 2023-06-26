@@ -3,9 +3,9 @@
     font-weight: 400;
     font-style: normal;
     src: local("StratosSkyeng"),
-        url("/gameFindCards/font/stratosskyengweb-regular.woff2")
+        url("../font/stratosskyengweb-regular.woff2")
             format("woff2"),
-        url("/gameFindCards/font/stratosskyengweb-regular.woff") format("woff");
+        url("../font/stratosskyengweb-regular.woff") format("woff");
 }
 
 @font-face {
@@ -13,8 +13,8 @@
     font-weight: 700;
     font-style: normal;
     src: local("StratosSkyeng"),
-        url("/gameFindCards/font/stratosskyengweb-bold.woff2") format("woff2"),
-        url("/gameFindCards/font/stratosskyengweb-bold.woff") format("woff");
+        url("../font/stratosskyengweb-bold.woff2") format("woff2"),
+        url("../font/stratosskyengweb-bold.woff") format("woff");
 }
 
 body {
