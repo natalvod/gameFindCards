@@ -91,17 +91,13 @@ body {
   margin-top: auto;
 }
 
-.card-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  grid-area: card;
-}
-
 .card {
   width: 95px;
   height: 133px;
   position: relative;
+}
+.card.remove {
+  visibility: hidden;
 }
 .card::after {
   content: "";
@@ -109,6 +105,11 @@ body {
   inset: 0;
   background-image: url("../img/card-side.svg");
   background-repeat: no-repeat;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+.card.open::after {
+  opacity: 0;
 }
 .card__img {
   width: 100%;
@@ -117,6 +118,16 @@ body {
      object-fit: cover;
   -o-object-position: center;
      object-position: center;
+}
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  grid-area: card;
+}
+.card-list.open .card::after {
+  opacity: 0;
 }
 
 .board-wrap {

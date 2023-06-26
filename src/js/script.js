@@ -1,7 +1,9 @@
 import '../style/style.scss';
 
 const board = document.querySelector("#app");
-
+let cardContainer;
+let prevCard;
+let waiting = false;
 const removeActiveAttrElements = (listElements) => {
     console.dir(Object.keys(listElements));
     Object.keys(listElements).forEach(index => listElements[index].removeAttribute("active"))
@@ -107,7 +109,7 @@ const initCard = (cardData) => {
     return cardNode
 }
 const initCardList = () => {
-    let cardContainer = document.createElement("div")
+    cardContainer = document.createElement("div")
     const cardListArray = []
     cardContainer.classList.add("card-list")
     for(let pair = 0; pair < app.state.pair; pair++) {
@@ -146,10 +148,68 @@ const initGameBoard = () => {
     //    </h1>
     // </div>`
 }
+
+const compareCards = (card, cardSecond) => {
+    if(card.dataset.pair === cardSecond.dataset.pair) {
+      card.classList.add("remove")
+      cardSecond.classList.add("remove")
+      card.removeAttribute("data-pair")
+      app.state.found++
+      
+    } 
+}
+
+const openCard = (card) => {
+    card.classList.add("open")
+    if(prevCard) {
+        waiting = true
+        //compare
+        compareCards(card, prevCard)
+        setTimeout(()=> {
+            prevCard.classList.remove("open")
+            card.classList.remove("open")
+            prevCard = undefined
+            waiting = false
+            if(app.state.found === app.levels[app.state.level]) {
+                alert("Поздравляем! Вы победили!")
+              }
+        }, 1000)
+    } else {
+        prevCard = card
+    }
+}
+
+const cardContainerListener = () => {
+    cardContainer.addEventListener('click', (event) => {
+      console.log(event.target);
+      if(event.target.hasAttribute("data-pair") && waiting === false) {
+        openCard(event.target)
+      }
+    })
+}
 const play= () => {
     clearBoard();
-    initGameBoard()
-    console.log("playGame");
+    const initPlayPromise = new Promise((resolve, reject)=> {
+        try {
+            console.log("before initGameBoard");
+            initGameBoard();
+            resolve()
+        } catch(error) {
+            reject(error)
+        }
+        
+    } )
+    initPlayPromise.then(() => {
+        console.log("initGameBoard");
+        cardContainer.classList.add("open")
+        waiting = true
+        setTimeout(()=> {
+          cardContainer.classList.remove('open')
+          waiting = false
+        },5000)
+        cardContainerListener()
+    })
+    console.log("level",app.state.level);
 }
 const result=() => {
     console.log("gameResult");
@@ -212,6 +272,7 @@ const app = {
         level: undefined,
         timer: 0,
         pair: -1, //id my choosen cart
+        found: 0,
     }
 }
 app.steps.start();

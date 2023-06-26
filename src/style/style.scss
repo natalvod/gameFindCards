@@ -3,8 +3,7 @@
     font-weight: 400;
     font-style: normal;
     src: local("StratosSkyeng"),
-        url("../font/stratosskyengweb-regular.woff2")
-            format("woff2"),
+        url("../font/stratosskyengweb-regular.woff2") format("woff2"),
         url("../font/stratosskyengweb-regular.woff") format("woff");
 }
 
@@ -101,17 +100,14 @@ body {
     }
 }
 
-.card-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    grid-area: card;
-}
-
 .card {
     width: 95px;
     height: 133px;
     position: relative;
+
+    &.remove {
+        visibility: hidden;
+    }
 
     &::after {
         content: "";
@@ -119,6 +115,12 @@ body {
         inset: 0;
         background-image: url("../img/card-side.svg");
         background-repeat: no-repeat;
+        opacity: 1;
+        transition: opacity 0.5s;
+    }
+
+    &.open::after {
+        opacity: 0;
     }
 
     &__img {
@@ -126,6 +128,17 @@ body {
         height: 100%;
         object-fit: cover;
         object-position: center;
+    }
+}
+
+.card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    grid-area: card;
+
+    &.open .card::after {
+        opacity: 0;
     }
 }
 
