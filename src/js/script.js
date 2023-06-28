@@ -1,4 +1,5 @@
 import '../style/style.scss';
+// import Img from "../static/img/6-clubs.svg";
 
 const board = document.querySelector("#app");
 let cardContainer;
@@ -105,9 +106,14 @@ const initCard = (cardData) => {
     let cardNode = document.createElement("div")
     cardNode.classList.add("card")
     cardNode.dataset.pair = cardData.id
-    cardNode.innerHTML = `<img src="${cardData.img}" width=50 hight=100 class="card__img">`
+    cardNode.innerHTML = `<img src="${require('../static/img/'+ cardData.img + '.svg')}" width=50 hight=100 class="card__img">`
     return cardNode
 }
+
+const sortCards = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+}
+
 const initCardList = () => {
     cardContainer = document.createElement("div")
     const cardListArray = []
@@ -119,7 +125,7 @@ const initCardList = () => {
     console.log(app.state.pair);
     console.dir(cardListArray);
     //вызываем функцию сортировки карточек
-    cardListArray.forEach(cardData => {
+    sortCards(cardListArray).forEach(cardData => {
         cardContainer.appendChild(initCard(cardData))
     })
     return cardContainer
@@ -229,43 +235,43 @@ const app = {
     cards: [
         {
             id: 1,
-            img: "https://via.placeholder.com/50x100"
+            img: '6-clubs'
         },
        {
             id: 2,
-            img: "https://via.placeholder.com/50x100"
+            img: '6-diamonds'
         },
         {
             id: 3,
-            img: "https://via.placeholder.com/50x100"
+            img: '7-clubs'
         },
        {
             id: 4,
-            img: "https://via.placeholder.com/50x100"
+            img: '7-diamonds'
         },
         {
             id: 5,
-            img: "https://via.placeholder.com/50x100"
+            img: '8-clubs'
         },
        {
             id: 6,
-            img: "https://via.placeholder.com/50x100"
+            img: '8-diamonds'
         },
         {
             id: 7,
-            img: "https://via.placeholder.com/50x100"
+            img: '9-clubs'
         },
        {
             id: 8,
-            img: "https://via.placeholder.com/50x100"
+            img: '9-diamonds'
         },
         {
             id: 9,
-            img: "https://via.placeholder.com/50x100"
+            img: '10-clubs'
         },
        {
             id: 10,
-            img: "https://via.placeholder.com/50x100"
+            img: '10-diamonds'
         }
     ],
     state: {
