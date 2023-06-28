@@ -156,6 +156,9 @@ const initGameBoard = () => {
 }
 
 const compareCards = (card, cardSecond) => {
+    if(card === cardSecond) {
+        return
+    }
     if(card.dataset.pair === cardSecond.dataset.pair) {
       card.classList.add("remove")
       cardSecond.classList.add("remove")
