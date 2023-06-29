@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 module.exports = {
-    entry: path.join(__dirname, 'src', 'js', 'script.js'),
+    entry: path.join(__dirname, 'src', 'js', 'script.ts'),
     output: {
         path: path.join(__dirname, 'dist'),
         filename: 'script.[contenthash].js',
@@ -14,10 +14,10 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                use: 'babel-loader',
+                test: /\.ts$/,
+                use: "ts-loader",
                 exclude: /node_modules/,
-            },
+              },
             {
                 test: /\.(scss|css)$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
@@ -35,6 +35,9 @@ module.exports = {
                 },
             },
         ],
+    },
+    resolve: {
+      extensions: [".ts", ".js"],
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -79,6 +82,6 @@ module.exports = {
     },
     devServer: {
         watchFiles: path.join(__dirname, 'src'),
-        port: 7000,
+        port: 8000,
     },
 };

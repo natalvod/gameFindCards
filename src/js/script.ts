@@ -1,27 +1,33 @@
 import '../style/style.scss';
 // import Img from "../static/img/6-clubs.svg";
 
-const board = document.querySelector("#app");
-let cardContainer;
-let prevCard;
+const board = document.querySelector("#app") as Element;
+let cardContainer: HTMLDivElement;
+let prevCard: HTMLElement | null;
 let waiting = false;
-const removeActiveAttrElements = (listElements) => {
+let timerInterval: NodeJS.Timer;
+const removeActiveAttrElements = (listElements: HTMLCollection | undefined) => {
+    if(!listElements) {
+        return
+    }
     console.dir(Object.keys(listElements));
-    Object.keys(listElements).forEach(index => listElements[index].removeAttribute("active"))
+    Object.keys(listElements).forEach((index: string) => listElements[Number(index)].removeAttribute("active"))
 }
-const selectLevel = (elem) => {
-    app.state.level = Number(elem.innerHTML);
-    app.state.pair = app.levels[app.state.level]
+const selectLevel = (elem : HTMLElement | null) => {
+    if(elem) {
+        app.state.level = Number(elem.innerHTML) as 0 | 1 | 2 | undefined;
+        app.state.pair = app.levels[app.state.level || 0]
     //console.log(elem.innerHTML);
-    removeActiveAttrElements(elem.parentNode.children)
+    removeActiveAttrElements(elem.parentNode?.children)
     // console.log(typeof Number(elem.innerHTML));
     elem.setAttribute("active", "")
+    }   
 }
 const listenClickOnLevels = () => {
     const levelElements = document.querySelectorAll(".content__link");
     levelElements.forEach(elem => {
         elem.addEventListener("click", (event) => {
-            selectLevel(event.target);
+            selectLevel(event.target as HTMLElement | null);
             console.dir(event.target);
         })
     })
@@ -29,7 +35,7 @@ const listenClickOnLevels = () => {
 
 const listenClickOnButton = () => {
     const startButton = document.querySelector(".button--start");
-    startButton.addEventListener("click", () => {
+    startButton?.addEventListener("click", () => {
         if(app.state.level) {
             app.steps.play();
         }      
@@ -53,12 +59,14 @@ const clearBoard = () => {
 const initTimer = () => {
     let min = 0;
     let sec = 0;
+    let stringMin = ""
+    let stringSec = ""
     let timerNode = document.createElement("div")
     timerNode.classList.add("timer")
     // timerNode.id = "timer"
     // let timerContainer = document.getElementById("timer")
     // const time = 
-    setInterval(timer, 1000)
+    timerInterval = setInterval(timer, 1000)
     function timer() {
           sec = Number(sec) + 1;
           if (sec === 60) {
@@ -70,21 +78,27 @@ const initTimer = () => {
             }
           }
           if(Number(min) < 10) {
-            min = `0${+min}`
+            stringMin = `0${+min}`
+          } else {
+            stringMin = String(min)
           }
           if(Number(sec) < 10) {
-            sec= `0${+sec}`
+            stringSec= `0${+sec}`
+          } else {
+            stringSec = String(sec)
           }
+          
+          app.state.timer = `${stringMin}.${stringSec}`
           timerNode.innerHTML = `
           
           <div class="timer__item">
             <div class="timer__title">min</div>
-            <div>${String(min)}</div>
+            <div>${stringMin}</div>
           </div>
           <span>.</span>
           <div class="timer__item">
             <div class="timer__title">sec</div>
-            <div>${String(sec)}</div>
+            <div>${stringSec}</div>
           </div>`
       }
 return timerNode
@@ -102,15 +116,15 @@ const restartGame = () => {
     }
     return buttonNode
 }
-const initCard = (cardData) => {
+const initCard = (cardData: cardType) => {
     let cardNode = document.createElement("div")
     cardNode.classList.add("card")
-    cardNode.dataset.pair = cardData.id
+    cardNode.dataset.pair = String(cardData.id)
     cardNode.innerHTML = `<img src="${require('../static/img/'+ cardData.img + '.svg')}" width=50 hight=100 class="card__img">`
     return cardNode
 }
 
-const sortCards = (array) => {
+const sortCards = (array: cardType[]) => {
     return array.sort(() => Math.random() - 0.5);
 }
 
@@ -125,7 +139,7 @@ const initCardList = () => {
     console.log(app.state.pair);
     console.dir(cardListArray);
     //вызываем функцию сортировки карточек
-    sortCards(cardListArray).forEach(cardData => {
+    sortCards(cardListArray).forEach((cardData: cardType) => {
         cardContainer.appendChild(initCard(cardData))
     })
     return cardContainer
@@ -155,7 +169,7 @@ const initGameBoard = () => {
     // </div>`
 }
 
-const compareCards = (card, cardSecond) => {
+const compareCards = (card: HTMLElement, cardSecond: HTMLElement) => {
     if(card === cardSecond) {
         return
     }
@@ -168,19 +182,19 @@ const compareCards = (card, cardSecond) => {
     } 
 }
 
-const openCard = (card) => {
+const openCard = (card: HTMLElement) => {
     card.classList.add("open")
     if(prevCard) {
         waiting = true
         //compare
         compareCards(card, prevCard)
         setTimeout(()=> {
-            prevCard.classList.remove("open")
+            prevCard?.classList.remove("open")
             card.classList.remove("open")
-            prevCard = undefined
+            prevCard = null
             waiting = false
-            if(app.state.found === app.levels[app.state.level]) {
-                alert("Поздравляем! Вы победили!")
+            if(app.state.found === app.levels[app.state.level || 0]) {
+                app.steps.result()
               }
         }, 1000)
     } else {
@@ -191,8 +205,9 @@ const openCard = (card) => {
 const cardContainerListener = () => {
     cardContainer.addEventListener('click', (event) => {
       console.log(event.target);
-      if(event.target.hasAttribute("data-pair") && waiting === false) {
-        openCard(event.target)
+      const target = event.target as HTMLElement
+      if(target.hasAttribute("data-pair") && waiting === false) {
+        openCard(target)
       }
     })
 }
@@ -202,7 +217,7 @@ const play= () => {
         try {
             console.log("before initGameBoard");
             initGameBoard();
-            resolve()
+            resolve(true)
         } catch(error) {
             reject(error)
         }
@@ -222,9 +237,43 @@ const play= () => {
 }
 const result=() => {
     console.log("gameResult");
+    let popupNode = document.createElement("div")
+    popupNode.classList.add("popup", "popup--celeb")
+    let windowPopupNode = document.createElement("div")
+    windowPopupNode.classList.add("popup__window")
+    let titleNode = document.createElement("h3")
+    titleNode.innerHTML = "Вы выиграли!"
+    titleNode.classList.add("popup__title", "popup__title--celeb")
+    let textNode = document.createElement("p")
+    textNode.innerHTML = "Затраченное время:"
+    textNode.classList.add("popup__text")
+    let timerNode = document.createElement("p")
+    timerNode.classList.add("popup__timer")
+    timerNode.innerHTML = app.state.timer
+    windowPopupNode.append(titleNode,textNode,timerNode,restartGame())
+    popupNode.appendChild(windowPopupNode)
+    board.appendChild(popupNode)
+    clearInterval(timerInterval)
 }
 
-const app = {
+type cardType = {
+    id: number,
+    img: string 
+}
+
+type appType = {
+    levels: Record<number, number>,
+    steps: Record<string, Function>,
+    cards: cardType[],
+    state: {
+        level?: 0|1|2,
+        timer: string,
+        pair: number,
+        found: number,
+    }
+}
+
+const app: appType = {
     levels: {
         1: 3,
         2: 6,
@@ -279,7 +328,7 @@ const app = {
     ],
     state: {
         level: undefined,
-        timer: 0,
+        timer: "",
         pair: -1, //id my choosen cart
         found: 0,
     }
