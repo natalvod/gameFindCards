@@ -233,6 +233,7 @@ body {
             margin: auto;
         }
     }
+
     &--dead {
         .popup__window::after {
             content: "";
