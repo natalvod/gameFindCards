@@ -168,12 +168,21 @@ body {
   font-style: normal;
   src: local("StratosSkyeng"), url("../font/stratosskyengweb-bold.woff2") format("woff2"), url("../font/stratosskyengweb-bold.woff") format("woff");
 }
+.popup__window {
+  background-color: #c2f5ff;
+  width: 480px;
+  height: 459px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  position: relative;
+}
+
 .popup {
   position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 1;
   font-family: StratosSkyeng, Arial, sans-serif;
   font-style: normal;
@@ -181,7 +190,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-image: linear-gradient(to top, rgba(0, 73, 128, 0.8), rgba(0, 73, 128, 0.8)), url("../static/img/playing-field.png");
+  background-color: rgba(0, 73, 128, 0.8);
   background-repeat: no-repeat, no-repeat;
   height: 100vh;
   background-size: cover, contain;
@@ -193,23 +202,24 @@ body {
 .popup--celeb .popup__window::after {
   content: "";
   position: absolute;
-  inset: 0;
   background-image: url("../static/img/celeb.png");
   background-repeat: no-repeat;
   background-position-x: center;
   top: 34px;
+  width: 91px;
+  height: 91px;
+  margin: auto;
 }
-
-.popup__window {
-  background-color: #C2F5FF;
-  width: 480px;
-  height: 459px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  position: relative;
+.popup--dead .popup__window::after {
+  content: "";
+  position: absolute;
+  background-image: url("../static/img/dead.png");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  top: 34px;
+  width: 91px;
+  height: 91px;
+  margin: auto;
 }
 
 .popup__title {
@@ -234,7 +244,7 @@ body {
   margin-bottom: 0;
 }
 
-.button {
+.popup__button {
   width: 246px;
   height: 50px;
   background: #7ac100;

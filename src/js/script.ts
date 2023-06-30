@@ -1,5 +1,33 @@
 import '../style/style.scss';
 // import Img from "../static/img/6-clubs.svg";
+type ResultState = "success" | "fail"
+type ResultData = {
+    class: string,
+    title: string,
+    text: string,
+    state: ResultState
+}
+
+type cardType = {
+    id: number,
+    img: string 
+}
+
+type appType = {
+    levels: Record<number, number>,
+    steps: {
+        start: () => void,
+        play: () => void,
+        result: (state: ResultData)  => void
+    },
+    cards: cardType[],
+    state: {
+        level?: 0|1|2,
+        timer: string,
+        pair: number,
+        found: number,
+    }
+}
 
 const board = document.querySelector("#app") as Element;
 let cardContainer: HTMLDivElement;
@@ -61,7 +89,7 @@ const initTimer = () => {
     let sec = 0;
     let stringMin = ""
     let stringSec = ""
-    let timerNode = document.createElement("div")
+    const timerNode = document.createElement("div")
     timerNode.classList.add("timer")
     // timerNode.id = "timer"
     // let timerContainer = document.getElementById("timer")
@@ -103,11 +131,14 @@ const initTimer = () => {
       }
 return timerNode
 }
-const restartGame = () => {
-    let buttonNode = document.createElement("button")
+const restartGame = (editionClass = "") => {
+    const buttonNode = document.createElement("button")
     buttonNode.innerHTML = "Начать заново"
     buttonNode.type = "button"
     buttonNode.classList.add("button", "button--clear")
+    if(editionClass) {
+        buttonNode.classList.add(editionClass)
+    }
     buttonNode.onclick = () => {
         // то же самое, что play(), но с задержкой
         // clearBoard()
@@ -117,7 +148,7 @@ const restartGame = () => {
     return buttonNode
 }
 const initCard = (cardData: cardType) => {
-    let cardNode = document.createElement("div")
+    const cardNode = document.createElement("div")
     cardNode.classList.add("card")
     cardNode.dataset.pair = String(cardData.id)
     cardNode.innerHTML = `<img src="${require('../static/img/'+ cardData.img + '.svg')}" width=50 hight=100 class="card__img">`
@@ -145,7 +176,7 @@ const initCardList = () => {
     return cardContainer
 }
 const initGameBoard = () => {
-    let boardWrapNode = document.createElement("div")
+    const boardWrapNode = document.createElement("div")
     boardWrapNode.classList.add("board-wrap")
     boardWrapNode.appendChild(initTimer())
     boardWrapNode.appendChild(restartGame())
@@ -179,7 +210,29 @@ const compareCards = (card: HTMLElement, cardSecond: HTMLElement) => {
       card.removeAttribute("data-pair")
       app.state.found++
       
-    } 
+    } else {
+        resultFail()
+    }
+}
+
+const resultFail = () => {
+    const data: ResultData = {
+        class: "popup--dead",
+        title: "Вы проиграли!",
+        text: "Затраченное время:",
+        state: "fail"
+    }
+    result(data)
+}
+
+const resultSuccess = () => {
+    const data: ResultData = {
+        class: "popup--celeb",
+        title: "Вы выиграли!",
+        text: "Затраченное время:",
+        state: "success"
+    }
+    result(data)
 }
 
 const openCard = (card: HTMLElement) => {
@@ -194,7 +247,8 @@ const openCard = (card: HTMLElement) => {
             prevCard = null
             waiting = false
             if(app.state.found === app.levels[app.state.level || 0]) {
-                app.steps.result()
+                resultSuccess()
+                // app.steps.result.call("success")
               }
         }, 1000)
     } else {
@@ -235,42 +289,25 @@ const play= () => {
     })
     console.log("level",app.state.level);
 }
-const result=() => {
+const result = (state: ResultData) => {
     console.log("gameResult");
-    let popupNode = document.createElement("div")
-    popupNode.classList.add("popup", "popup--celeb")
-    let windowPopupNode = document.createElement("div")
+    const popupNode = document.createElement("div")
+    popupNode.classList.add("popup", state.class)
+    const windowPopupNode = document.createElement("div")
     windowPopupNode.classList.add("popup__window")
-    let titleNode = document.createElement("h3")
-    titleNode.innerHTML = "Вы выиграли!"
+    const titleNode = document.createElement("h3")
+    titleNode.innerHTML = state.title
     titleNode.classList.add("popup__title", "popup__title--celeb")
-    let textNode = document.createElement("p")
-    textNode.innerHTML = "Затраченное время:"
+    const textNode = document.createElement("p")
+    textNode.innerHTML = state.text
     textNode.classList.add("popup__text")
-    let timerNode = document.createElement("p")
+    const timerNode = document.createElement("p")
     timerNode.classList.add("popup__timer")
     timerNode.innerHTML = app.state.timer
-    windowPopupNode.append(titleNode,textNode,timerNode,restartGame())
+    windowPopupNode.append(titleNode,textNode,timerNode,restartGame("popup__button"))
     popupNode.appendChild(windowPopupNode)
     board.appendChild(popupNode)
     clearInterval(timerInterval)
-}
-
-type cardType = {
-    id: number,
-    img: string 
-}
-
-type appType = {
-    levels: Record<number, number>,
-    steps: Record<string, Function>,
-    cards: cardType[],
-    state: {
-        level?: 0|1|2,
-        timer: string,
-        pair: number,
-        found: number,
-    }
 }
 
 const app: appType = {
