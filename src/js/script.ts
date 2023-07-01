@@ -8,6 +8,10 @@ type ResultData = {
     state: ResultState
 }
 
+// export const sum = (a: number, b: number) => {
+//     return a + b
+// }
+
 type cardType = {
     id: number,
     img: string 
@@ -131,7 +135,7 @@ const initTimer = () => {
       }
 return timerNode
 }
-const restartGame = (editionClass = "") => {
+export const restartGame = (editionClass = "") => {
     const buttonNode = document.createElement("button")
     buttonNode.innerHTML = "Начать заново"
     buttonNode.type = "button"
@@ -147,11 +151,13 @@ const restartGame = (editionClass = "") => {
     }
     return buttonNode
 }
-const initCard = (cardData: cardType) => {
+export const initCard = (cardData: cardType) => {
     const cardNode = document.createElement("div")
     cardNode.classList.add("card")
     cardNode.dataset.pair = String(cardData.id)
-    cardNode.innerHTML = `<img src="${require('../static/img/'+ cardData.img + '.svg')}" width=50 hight=100 class="card__img">`
+    if(cardData.img) {
+        cardNode.innerHTML = `<img src="${require('../static/img/'+ cardData.img + '.svg')}" width=50 hight=100 class="card__img">`
+    }
     return cardNode
 }
 
@@ -159,20 +165,27 @@ const sortCards = (array: cardType[]) => {
     return array.sort(() => Math.random() - 0.5);
 }
 
-const initCardList = () => {
+export const initCardList = (test?: {pair: number}) => {
+     if(test) {
+        app.state.pair = test.pair
+    }
     cardContainer = document.createElement("div")
-    const cardListArray = []
+    const cardListArray: cardType[] = []
     cardContainer.classList.add("card-list")
     for(let pair = 0; pair < app.state.pair; pair++) {
         cardListArray.push(app.cards[pair])
         cardListArray.push(app.cards[pair])
     }
-    console.log(app.state.pair);
-    console.dir(cardListArray);
+    // console.log(app.state.pair);
+    // console.dir(cardListArray);
     //вызываем функцию сортировки карточек
     sortCards(cardListArray).forEach((cardData: cardType) => {
+        if(test) {
+            cardData.img = ""
+        }
         cardContainer.appendChild(initCard(cardData))
     })
+    console.log(cardContainer);
     return cardContainer
 }
 const initGameBoard = () => {
@@ -200,7 +213,7 @@ const initGameBoard = () => {
     // </div>`
 }
 
-const compareCards = (card: HTMLElement, cardSecond: HTMLElement) => {
+export const compareCards = (card: HTMLElement, cardSecond: HTMLElement, test = false) => {
     if(card === cardSecond) {
         return
     }
@@ -209,9 +222,13 @@ const compareCards = (card: HTMLElement, cardSecond: HTMLElement) => {
       cardSecond.classList.add("remove")
       card.removeAttribute("data-pair")
       app.state.found++
+      return true
       
     } else {
-        resultFail()
+        if(!test) {
+            resultFail()
+        }
+        return false
     }
 }
 
@@ -361,6 +378,22 @@ const app: appType = {
        {
             id: 10,
             img: '10-diamonds'
+        },
+       {
+            id: 11,
+            img: 'a-clubs'
+        },
+       {
+            id: 12,
+            img: 'j-clubs'
+        },
+       {
+            id: 13,
+            img: 'k-clubs'
+        },
+       {
+            id: 14,
+            img: 'q-clubs'
         }
     ],
     state: {
