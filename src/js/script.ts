@@ -170,7 +170,7 @@ export const initCardList = (test?: {pair: number}) => {
         app.state.pair = test.pair
     }
     cardContainer = document.createElement("div")
-    const cardListArray = []
+    const cardListArray: cardType[] = []
     cardContainer.classList.add("card-list")
     for(let pair = 0; pair < app.state.pair; pair++) {
         cardListArray.push(app.cards[pair])
