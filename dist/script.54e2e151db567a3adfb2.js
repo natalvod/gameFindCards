@@ -197,8 +197,11 @@ const initGameBoard = () => {
 };
 const compareCards = (card, cardSecond, test = false) => {
     if (card === cardSecond) {
-        return;
+        console.log("The same card");
+        return false;
     }
+    console.log("card", card.dataset);
+    console.log("cardSecond", cardSecond.dataset);
     if (card.dataset.pair === cardSecond.dataset.pair) {
         card.classList.add("remove");
         cardSecond.classList.add("remove");
@@ -237,8 +240,9 @@ const openCard = (card) => {
     if (prevCard) {
         waiting = true;
         //compare
-        (0, exports.lr)(card, prevCard);
-        setTimeout(() => {
+        const isSimilar = (0, exports.lr)(card, prevCard);
+        if (isSimilar) {
+            // setTimeout(()=> {
             prevCard === null || prevCard === void 0 ? void 0 : prevCard.classList.remove("open");
             card.classList.remove("open");
             prevCard = null;
@@ -247,7 +251,11 @@ const openCard = (card) => {
                 resultSuccess();
                 // app.steps.result.call("success")
             }
-        }, 1000);
+            // }, 0)
+        }
+        else {
+            waiting = false;
+        }
     }
     else {
         prevCard = card;
@@ -255,15 +263,28 @@ const openCard = (card) => {
 };
 const cardContainerListener = () => {
     cardContainer.addEventListener('click', (event) => {
-        console.log(event.target);
+        console.log("card container listener", event.target);
+        console.log("waiting", waiting);
         const target = event.target;
         if (target.hasAttribute("data-pair") && waiting === false) {
             openCard(target);
         }
     });
 };
+const clearState = () => {
+    app.state.found = 0;
+    app.state.timer = "";
+    prevCard = null;
+    // state: {
+    //     level: undefined,
+    //     timer: "",
+    //     pair: -1, //id my choosen cart
+    //     found: 0,
+    // }
+};
 const play = () => {
     clearBoard();
+    clearState();
     const initPlayPromise = new Promise((resolve, reject) => {
         try {
             console.log("before initGameBoard");
@@ -281,8 +302,8 @@ const play = () => {
         setTimeout(() => {
             cardContainer.classList.remove('open');
             waiting = false;
+            cardContainerListener();
         }, 5000);
-        cardContainerListener();
     });
     console.log("level", app.state.level);
 };

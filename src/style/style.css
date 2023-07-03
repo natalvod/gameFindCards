@@ -107,7 +107,6 @@ body {
   background-image: url("../static/img/card-side.svg");
   background-repeat: no-repeat;
   opacity: 1;
-  transition: opacity 0.5s;
 }
 .card.open::after {
   opacity: 0;
