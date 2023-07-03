@@ -117,7 +117,8 @@ body {
         background-image: url("../static/img/card-side.svg");
         background-repeat: no-repeat;
         opacity: 1;
-        transition: opacity 0.5s;
+
+        // transition: opacity 0.1s;
     }
 
     &.open::after {

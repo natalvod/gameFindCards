@@ -1,3 +1,4 @@
+import { log } from 'console';
 import '../style/style.scss';
 // import Img from "../static/img/6-clubs.svg";
 type ResultState = "success" | "fail"
@@ -215,8 +216,11 @@ const initGameBoard = () => {
 
 export const compareCards = (card: HTMLElement, cardSecond: HTMLElement, test = false) => {
     if(card === cardSecond) {
-        return
+        console.log("The same card");
+        return false
     }
+    console.log("card", card.dataset)
+    console.log("cardSecond", cardSecond.dataset)
     if(card.dataset.pair === cardSecond.dataset.pair) {
       card.classList.add("remove")
       cardSecond.classList.add("remove")
@@ -257,17 +261,21 @@ const openCard = (card: HTMLElement) => {
     if(prevCard) {
         waiting = true
         //compare
-        compareCards(card, prevCard)
-        setTimeout(()=> {
-            prevCard?.classList.remove("open")
-            card.classList.remove("open")
-            prevCard = null
+        const isSimilar = compareCards(card, prevCard)
+        if(isSimilar) {
+            // setTimeout(()=> {
+                prevCard?.classList.remove("open")
+                card.classList.remove("open")
+                prevCard = null
+                waiting = false
+                if(app.state.found === app.levels[app.state.level || 0]) {
+                    resultSuccess()
+                    // app.steps.result.call("success")
+                  }
+            // }, 0)
+        } else {
             waiting = false
-            if(app.state.found === app.levels[app.state.level || 0]) {
-                resultSuccess()
-                // app.steps.result.call("success")
-              }
-        }, 1000)
+        }      
     } else {
         prevCard = card
     }
@@ -275,15 +283,30 @@ const openCard = (card: HTMLElement) => {
 
 const cardContainerListener = () => {
     cardContainer.addEventListener('click', (event) => {
-      console.log(event.target);
+      console.log("card container listener", event.target);
+      console.log("waiting", waiting)
       const target = event.target as HTMLElement
       if(target.hasAttribute("data-pair") && waiting === false) {
         openCard(target)
       }
     })
 }
+
+const clearState = () => {
+    app.state.found = 0
+    app.state.timer = ""
+    prevCard = null
+    // state: {
+    //     level: undefined,
+    //     timer: "",
+    //     pair: -1, //id my choosen cart
+    //     found: 0,
+    // }
+}
+
 const play= () => {
     clearBoard();
+    clearState()
     const initPlayPromise = new Promise((resolve, reject)=> {
         try {
             console.log("before initGameBoard");
@@ -301,8 +324,8 @@ const play= () => {
         setTimeout(()=> {
           cardContainer.classList.remove('open')
           waiting = false
-        },5000)
-        cardContainerListener()
+          cardContainerListener()
+        },5000)   
     })
     console.log("level",app.state.level);
 }
